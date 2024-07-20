@@ -66,14 +66,14 @@ def create_model(filter_kernels, dense_outputs, maxlen, vocab_size, nb_filter, c
     z = Dropout(0.25)(Dense(dense_outputs, activation='relu')(conv5))
     z = Dropout(0.25)(Dense(dense_outputs, activation='relu')(z))
 
-    # Output dense layer with softmax activation
-    pred = Dense(cat_output, activation='softmax', name='output')(z)
+    # Output dense layer with sigmoid activation
+    pred = Dense(cat_output, activation='linear', name='output')(z)
 
     model = Model(inputs=inputs, outputs=pred)
 
     sgd = SGD(learning_rate=0.01, momentum=0.9)
     adam = Adam(learning_rate=0.001)  # Feel free to use SGD above. I found Adam with lr=0.001 is faster than SGD with lr=0.01
-    model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+    model.compile(loss='mean_squared_error', optimizer=adam, metrics=["accuracy"])
     # model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 
     return model
